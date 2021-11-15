@@ -1,0 +1,78 @@
+digraph DebugTree {
+    p1[shape = none label = <
+	<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">	  
+			<TR>																	 	  
+				<TD COLSPAN = "2"><FONT COLOR = "blue"><B>"cute"</B></FONT></TD>      
+			</TR>																		  
+			<TR>																		  
+				<TD  WIDTH="60" HEIGHT="25">1</TD>								  
+				<TD  WIDTH="60" HEIGHT="25">2</TD>								  
+			</TR>																		  
+		</TABLE >>
+]
+    p1 -> p2
+    p2[shape = none label = <
+	<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">	  
+			<TR>																	 	  
+				<TD COLSPAN = "2"><FONT COLOR = "blue"><B>"kitty"</B></FONT></TD>      
+			</TR>																		  
+			<TR>																		  
+				<TD  WIDTH="60" HEIGHT="25">-1</TD>								  
+				<TD  WIDTH="60" HEIGHT="25">-1</TD>								  
+			</TR>																		  
+		</TABLE >>
+]
+    p2 -> p3
+    p3[label = "NULL"]
+
+    p2 -> p4
+    p4[label = "NULL"]
+
+    p1 -> p5
+    p5[shape = none label = <
+	<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">	  
+			<TR>																	 	  
+				<TD COLSPAN = "2"><FONT COLOR = "blue"><B>"solid"</B></FONT></TD>      
+			</TR>																		  
+			<TR>																		  
+				<TD  WIDTH="60" HEIGHT="25">3</TD>								  
+				<TD  WIDTH="60" HEIGHT="25">4</TD>								  
+			</TR>																		  
+		</TABLE >>
+]
+    p5 -> p6
+    p6[shape = none label = <
+	<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">	  
+			<TR>																	 	  
+				<TD COLSPAN = "2"><FONT COLOR = "blue"><B>"table"</B></FONT></TD>      
+			</TR>																		  
+			<TR>																		  
+				<TD  WIDTH="60" HEIGHT="25">-1</TD>								  
+				<TD  WIDTH="60" HEIGHT="25">-1</TD>								  
+			</TR>																		  
+		</TABLE >>
+]
+    p6 -> p7
+    p7[label = "NULL"]
+
+    p6 -> p8
+    p8[label = "NULL"]
+
+    p5 -> p9
+    p9[shape = none label = <
+	<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">	  
+			<TR>																	 	  
+				<TD COLSPAN = "2"><FONT COLOR = "blue"><B>"something"</B></FONT></TD>      
+			</TR>																		  
+			<TR>																		  
+				<TD  WIDTH="60" HEIGHT="25">-1</TD>								  
+				<TD  WIDTH="60" HEIGHT="25">-1</TD>								  
+			</TR>																		  
+		</TABLE >>
+]
+    p9 -> p10
+    p10[label = "NULL"]
+
+    p9 -> p11
+    p11[label = "NULL"]
+}
