@@ -85,25 +85,25 @@ size_t AkiTreePushRight(AkiTree* tree, unsigned int index, unsigned int value)
 	return node;
 }
 
-void printTree(FILE* fout, AkiTree* tree, char* values, size_t ptr, int* number)
+void printTree(FILE* fout, AkiTree* tree, wchar_t* values, size_t ptr, int* number)
 {
 	int mynum = *number;
 	(*number)++;
 
 	if (ptr == AKITREE_NOPTR)
 	{
-		fprintf(fout, "    p%d[label = \"NULL\"]\n", mynum);
+		fwprintf(fout, L"    p%d[label = \"NULL\"]\n", mynum);
 		return;
 	}
 
 	if (mynum == 1)
-		fprintf(fout, "digraph DebugTree {\n");
+		fwprintf(fout, L"digraph DebugTree {\n");
 
-	fprintf(fout, "    p%d[shape = none label = <\n", mynum);
-	fprintf(fout,
-		"	<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\">	  \n\
+	fwprintf(fout, L"    p%d[shape = none label = <\n", mynum);
+	fwprintf(fout,
+		L"	<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\">	  \n\
 			<TR>																	 	  \n\
-				<TD COLSPAN = \"2\"><FONT COLOR = \"blue\"><B>\"%s\"</B></FONT></TD>      \n\
+				<TD COLSPAN = \"2\"><FONT COLOR = \"blue\"><B>\"%ls\"</B></FONT></TD>     \n\
 			</TR>																		  \n\
 			<TR>																		  \n\
 				<TD  WIDTH=\"60\" HEIGHT=\"25\">%lld</TD>								  \n\
@@ -112,14 +112,14 @@ void printTree(FILE* fout, AkiTree* tree, char* values, size_t ptr, int* number)
 		</TABLE >>\n]",
 		values + tree->data[ptr].value, tree->data[ptr].left, tree->data[ptr].right);
 
-	fprintf(fout, "\n    p%d -> p%d\n", mynum, *number);
+	fwprintf(fout, L"\n    p%d -> p%d\n", mynum, *number);
 	printTree(fout, tree, values, tree->data[ptr].left, number);
 
-	fprintf(fout, "\n    p%d -> p%d\n", mynum, *number);
+	fwprintf(fout, L"\n    p%d -> p%d\n", mynum, *number);
 	printTree(fout, tree, values, tree->data[ptr].right, number);
 
 
 
 	if (mynum == 1)
-		fprintf(fout, "}\n");
+		fwprintf(fout, L"}\n");
 }

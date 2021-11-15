@@ -2,9 +2,9 @@
 
 #include <stdlib.h>
 
-unsigned int namesAppend(NameData* names, const char* str)
+unsigned int namesAppend(NameData* names, const wchar_t* str)
 {
-	size_t new_size = names->size + strlen(str) + 1;
+	size_t new_size = names->size + wcslen(str) + 1;
 	if (new_size > names->capacity)
 	{
 		if (names->capacity == 0)
@@ -13,12 +13,12 @@ unsigned int namesAppend(NameData* names, const char* str)
 		while (names->capacity < new_size)
 			names->capacity *= 2;
 
-		names->data = (char*)realloc(names->data, names->capacity * sizeof(char));
+		names->data = (wchar_t*)realloc(names->data, names->capacity * sizeof(wchar_t));
 	}
 
 	unsigned int index = names->size;
 
-	strcpy(names->data + names->size, str);
+	wcscpy(names->data + names->size, str);
 	names->size = new_size;
 
 	return index;
@@ -36,8 +36,8 @@ void readDataBase(const char* data_path, AkiTree* tree, NameData* names)
 
 	fread (&names->capacity, sizeof(size_t), 1, data);
 	names->size = names->capacity;
-	names->data = (char*)calloc(names->capacity, sizeof(char));
-	fread (names->data, sizeof(char), names->size, data);
+	names->data = (wchar_t*)calloc(names->capacity, sizeof(wchar_t));
+	fread (names->data, sizeof(wchar_t), names->size, data);
 
 	fclose(data);
 }
@@ -51,7 +51,7 @@ void saveDataBase(const char* data_path, AkiTree* tree, NameData* names)
 
 
 	fwrite (&names->size, sizeof(size_t), 1, data);
-	fwrite ( names->data, sizeof(char), names->size, data);
+	fwrite ( names->data, sizeof(wchar_t), names->size, data);
 
 	fclose(data);
 }

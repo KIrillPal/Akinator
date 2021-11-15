@@ -30,6 +30,6 @@ size_t AkiTreePushRight (AkiTree* tree, unsigned int index, unsigned int value);
 
 int AkiTreeEnlarge(AkiTree* tree, size_t cap);
 
-void printTree(FILE* fout, AkiTree* tree, char* values, size_t ptr, int* number);
+void printTree(FILE* fout, AkiTree* tree, wchar_t* values, size_t ptr, int* number);
 
 #endif

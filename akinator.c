@@ -1,45 +1,48 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <locale.h>
+#include <wchar.h>
+#include <windows.h>
 #include "akinator_tree.h"
 #include "data_base.h"
 
 #define VALUE(names, index) (names->data + AkiTreeGetValue(tree, index))
 
-void getArg(char* buf, int max_length)
+void getArg(wchar_t* buf, int max_length)
 {
-	fgets(buf, max_length, stdin);
+	fgetws(buf, max_length, stdin);
 
 	bool failed = 0;
-	int length = strlen(buf);
+	int length = wcslen(buf);
 
-	while (buf[length - 1] != '\n')
+	while (buf[length - 1] != L'\n')
 	{
 		failed = 1;
 
-		fgets(buf, max_length, stdin);
-		length = strlen(buf);
+		fgetws(buf, max_length, stdin);
+		length = wcslen(buf);
 	}
 	if (failed)
 	{
-		printf("Sorry, max length: %d characters. Try again\n", max_length - 1);
+		wprintf(L"Ты весьма перестарался. Мы больше %d символов не принимаем\n", max_length - 1);
 		getArg(buf, max_length);
 	}
-	else buf[length - 1] = '\0';
+	else buf[length - 1] = L'\0';
 }
 
 void addItem(AkiTree* tree, size_t index, NameData * names)
 {
 	const int MAX_TEXT_LENGTH = 32;
 
-	char     name[MAX_TEXT_LENGTH + 1] = { 0 };
-	char question[MAX_TEXT_LENGTH + 1] = { 0 };
+	wchar_t     name[MAX_TEXT_LENGTH + 1] = { 0 };
+	wchar_t question[MAX_TEXT_LENGTH + 1] = { 0 };
 
 
-	printf("What you've thinked?\n");
+	wprintf(L"Ну и что ж ты загадал?\nЭто ");
 	getArg(name, MAX_TEXT_LENGTH);
 
-	printf("What difference between '%s' and '%s'?\nIt's ", VALUE(names, index), name);
+	wprintf(L"И чем объект '%ls' отличается от объекта '%ls'?\nОн ", VALUE(names, index), name);
 	getArg(question, MAX_TEXT_LENGTH);
 
 
@@ -47,38 +50,38 @@ void addItem(AkiTree* tree, size_t index, NameData * names)
 	AkiTreePushRight (tree, index, AkiTreeGetValue(tree, index));
 	AkiTreeSetValue(tree, index, namesAppend(names, question));
 
-	printf("Ok. You won, but I'll remember it\n\n");
+	wprintf(L"Ладно. Ты победил, кожаный мешок... Но я это запомню\n\n");
 }
 
 void play(AkiTree* tree, NameData* names, bool* tree_updated)
 {
-	printf("Let's play. Print 'yes' and 'no' or 'y' and 'n' to answer\n");
+	wprintf(L"Ну поехали. Для ответа вводим 'да' и 'нет' или 'д' и 'н'\n");
 
 	size_t ptr = 0;
-	char answer[10];
+	wchar_t answer[10];
 
 	while (true)
 	{
-		printf("Is it %s?\n", VALUE(names, ptr));
+		wprintf(L"Этот объект %ls?\n", VALUE(names, ptr));
 
 		do
 		{
-			scanf("%s%*c", answer);
+			wscanf(L"%ls%*lc", answer);
 
-			if (answer[0] == 'y')
+			if (answer[0] == L'д')
 			{
 				size_t nxt = AkiTreeGetLeft(tree, ptr);
 
 				if (nxt == AKITREE_NOPTR)
 				{
-					printf("I won!\n\n");
+					wprintf(L"Ахахах я мудрец! Я снова угадал\n\n");
 					*tree_updated = 0;
 					return;
 				}
 				else ptr = nxt;
 
 			}
-			else if (answer[0] == 'n')
+			else if (answer[0] == L'н')
 			{
 				size_t nxt = AkiTreeGetRight(tree, ptr);
 
@@ -92,12 +95,18 @@ void play(AkiTree* tree, NameData* names, bool* tree_updated)
 
 			}
 
-		} while (answer[0] != 'y' && answer[0] != 'n');
+		} while (answer[0] != L'д' && answer[0] != L'н');
 	}
 }
 
 int main(int arc, const char* argv[])
 {
+	setlocale(LC_ALL, "");
+	SetConsoleOutputCP(1251);
+	SetConsoleCP(1251);
+	fwide(stdin , 1);
+	fwide(stdout, 1);
+
 	NameData names;
 	AkiTree tree;
 
@@ -115,9 +124,9 @@ int main(int arc, const char* argv[])
 
 		AkiTreeCtor(&tree);
 
-		AkiTreeAddValue(&tree, namesAppend(&names, "something"));
+		AkiTreeAddValue(&tree, namesAppend(&names, L"неясно что"));
 	}
-	printf("Welcome! ");
+	wprintf(L"Добро пожаловать! ");
 
 	int top_printing = 1;
 
@@ -125,17 +134,17 @@ int main(int arc, const char* argv[])
 	{
 		if (top_printing)
 		{
-			printf("Do you want to (p) - play, (g) - get definition, (d) - dump, (o) - exit?\n");
+			wprintf(L"Хотите (и) - играть, (п) - описать предмет, (д) - dump, (о) - выход?\n");
 			top_printing = 0;
 		}
 
-		char command = 0;
+		wchar_t command = 0;
 
-		scanf("%c%*c", &command);
+		wscanf(L"%lc%*lc", &command);
 		
 		switch (command)
 		{
-		case 'p': 
+		case L'и': 
 		{
 			bool is_upd = 0;
 			play(&tree, &names, &is_upd);
@@ -146,30 +155,33 @@ int main(int arc, const char* argv[])
 			top_printing = 1;
 			break;
 		}
-		case 'o': 	
+		case L'о': 	
 		{
 			AkiTreeDtor(&tree);
 			free(names.data);
-			printf("Goodbye!\n");
+			wprintf(L"Покедова!\n");
 			return 0;
 		}
-		case 'd':
+		case L'д':
 		{
 			int number = 1;
 			FILE* viz = fopen("debug.gv", "w");
+
+			fwide(viz, 1);
+
 			printTree(viz, &tree, names.data, 0, &number);
 			fclose(viz);
 
 			system("dot debug.gv -Tpng -o debug.png");
 
-			printf("Tree was successfully drawn\n\n");
+			wprintf(L"Ваше дерево успешно отрисовано\n\n");
 
 			top_printing = 1;
 			break;
 		}
 
 		default:
-			printf("Unknown: '%c'\n", command);
+			wprintf(L"Какой такой '%lc'?\n", command);
 			break;
 		}
 	}
